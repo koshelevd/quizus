@@ -88,6 +88,7 @@ def congrats(request, slug):
     Display result page.
     """
     quiz = get_object_or_404(Quiz, slug=slug)
-    if quiz.success_page is not None:
+
+    if quiz.success_page != '':
         return HttpResponse(quiz.success_page)
     return render(request, 'quiz/congrats.html', {})
