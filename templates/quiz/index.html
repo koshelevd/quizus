@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+{% block title %} Главная {% endblock %}
+{% block content %}
+
+
+<div class="mdl-grid">
+  {% for quiz in quiz_list %}
+    <div class="mdl-cell mdl-cell--4-col">
+      <div class="demo-card-wide mdl-card mdl-shadow--2dp">
+        <div class="mdl-card__title"
+        {% load thumbnail %}
+        {% thumbnail quiz.image "320x200" crop="center" upscale=True as im %}
+        {% if quiz.image != "" %}
+           style="background-image: url({{ im.url }});">
+        {% else %}
+              >
+        {% endif %}
+        {% endthumbnail %}
+          <h2 class="mdl-card__title-text">{{ quiz.title }}</h2>
+        </div>
+        <div class="mdl-card__supporting-text">
+          {{ quiz.description }}
+        </div>
+        <div class="mdl-card__actions mdl-card--border">
+          <a href="{% url 'show_quiz' quiz.slug %}"
+             class="mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect">
+            Участвовать
+          </a>
+        </div>
+        <div class="mdl-card__menu">
+          <button
+              class="mdl-button mdl-button--icon mdl-js-button mdl-js-ripple-effect">
+            <i class="material-icons">share</i>
+          </button>
+        </div>
+      </div>
+    </div>
+  {% endfor %}
+</div>
+
+
+{% endblock %}
+

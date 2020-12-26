@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+{% block title %} Поздравляем! {% endblock %}
+{% block content %}
+
+<div class="congrats">
+  <div style="padding-top:45.208%;position:relative;">
+    <iframe src="https://gifer.com/embed/7E2d" width="100%" height="100%"
+            style='position:absolute;top:0;left:0;' frameBorder="0"
+            allowFullScreen></iframe>
+  </div>
+
+  <a href="{% url 'index' %}"
+     class="congrats__button mdl-button mdl-js-button mdl-button--raised mdl-button--colored"
+     type="button">
+    На главную
+  </a>
+</div>
+
+{% endblock %}
+

@@ -1,0 +1,104 @@
+{% extends "base.html" %}
+{% block title %} Квиз {% endblock %}
+{% block header %} {{ quiz.title }} {% endblock %}
+{% block content %}
+
+{% if question is None %}
+<h2>Нет вопросов.  </h2>
+<a href="{% url 'index' %}" >
+  Вернутья на главную
+</a>
+{% else %}
+
+<h2>{{ question_index }}/{{ count }} {{ question.content }}</h2>
+<div class="quiz">
+  {% if question.image != "" %}
+  {% load thumbnail %}
+  {% thumbnail question.image "400x400" crop="center" upscale=False as im %}
+  <img src="{{ im.url }}" alt="" class="quiz__image">
+
+  {% endthumbnail %}
+  {% else %}
+  <img src="../media/question.jpg" alt="" class="quiz__image">
+  {% endif %}
+
+  <form class="quiz__right" method="post">
+    {% csrf_token %}
+    {% if result is None%}
+    <input type="hidden" name="question_index"
+           value="{{ question_index }}">
+    <input type="hidden" name="question_pk"
+           value="{{ question.pk }}">
+      {% if answers is not None%}
+        <ul class="quiz__answers mdl-list">
+          {% for index, answer in answers %}
+          <li class="mdl-list__item mdl-list__item--three-line">
+                    <span class="mdl-list__item-primary-content">
+                      <span
+                          class="mdl-chip__contact mdl-color--teal mdl-color-text--white">{{ index }}</span>
+                      <span>{{ answer.content }}</span>
+                      <span
+                          class="mdl-list__item-text-body quiz__answer-is-right quiz__not-visible answer-{{ index }}">
+                        Правильно!
+                      </span>
+
+                    </span>
+            <span class="mdl-list__item-secondary-content">
+                      <label
+                          class="mdl-checkbox mdl-js-checkbox mdl-js-ripple-effect"
+                          for="list-checkbox-{{ index }}">
+                        <input type="checkbox" id="list-checkbox-{{ index }}"
+                               class="mdl-checkbox__input"
+                               name="answer-{{ answer.pk }}"/>
+                      </label>
+                    </span>
+          </li>
+          {% endfor %}
+        </ul>
+      {% else %}
+        <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+          <input class="mdl-textfield__input" type="text" id="sample3"
+                 name="input-field">
+          <label class="mdl-textfield__label" for="sample3">Ваш ответ</label>
+        </div>
+      {% endif %}
+    <button
+        class="quiz__button mdl-button mdl-js-button mdl-button--raised mdl-button--accent"
+        type="submit" disabled>
+      Проверить
+    </button>
+    {% else %}
+    <div>
+      {% if result %}
+      <h3 class="quiz__result-header quiz__result-header_right">
+        Верно!
+      </h3>
+      {% else %}
+      <h3 class="quiz__result-header quiz__result-header_wrong">
+        Неправильный ответ :(
+      </h3>
+      {% endif %}
+      <p class="quiz__element_centered">Правильно: {{ right_answers }}</p>
+      <p class="quiz__element_centered">Ваш ответ: {{ user_answers }}</p>
+    </div>
+    {% if question_index < count %}
+    <input type="hidden" name="next"
+           value="{{ question_index }}">
+    <button
+        class="quiz__button mdl-button mdl-js-button mdl-button--raised mdl-button--colored"
+        type="submit">
+      Следующий вопрос
+    </button>
+    {% else %}
+    <a href="{% url 'congrats' quiz.slug %}"
+       class="quiz__button mdl-button mdl-js-button mdl-button--raised mdl-button--colored"
+       type="button">
+      Перейти к результатам
+    </a>
+    {% endif %}
+    {% endif %}
+
+  </form>
+</div>
+{% endif %}
+{% endblock %}
