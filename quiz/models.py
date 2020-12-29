@@ -49,9 +49,8 @@ class Question(models.Model):
     content = models.TextField(
         verbose_name='Содержание вопроса',
     )
-    quiz = models.ForeignKey(
+    quiz = models.ManyToManyField(
         Quiz,
-        on_delete=models.CASCADE,
         related_name='questions',
         verbose_name='Викторина',
     )
